@@ -19,6 +19,10 @@ public class DriveLogController : Controller
     [ProducesResponseType(typeof(GetDrivesRes[]), 200)]
     public IActionResult GetDriveLogsAggregation([FromBody]GetDrivesReq req)
     {
+        if(req.Start >= req.End)
+        {
+            return BadRequest("Incorrect range");
+        }
         return Ok(_driveService.GetDrives(req));
     }
 }

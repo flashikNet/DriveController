@@ -21,6 +21,7 @@ namespace UssJuniorTest.Application.Services
         public GetDrivesRes[] GetDrives(GetDrivesReq req)
         {
             var res = from driveLog in driveLogRepository.GetAll()
+                      where req.Start < driveLog.EndDateTime && req.End > driveLog.StartDateTime
                       join person in personRepository.GetAll() on driveLog.PersonId equals person.Id
                       join car in carRepository.GetAll() on driveLog.CarId equals car.Id
                       select new GetDrivesRes
@@ -33,7 +34,7 @@ namespace UssJuniorTest.Application.Services
                           Hours = (Min(req.End, driveLog.EndDateTime) - Max(req.Start, driveLog.StartDateTime)).Hours,
                           Minutes = (Min(req.End, driveLog.EndDateTime) - Max(req.Start, driveLog.StartDateTime)).Minutes
                       };
-            return res.Where(x => x.Days >=0 && x.Hours >= 0 && x.Minutes >= 0).ToArray();
+            return res.ToArray();
         }
 
         private DateTime Max(DateTime dt1, DateTime dt2)
