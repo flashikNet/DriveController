@@ -1,17 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UssJuniorTest.Application.Interfaces;
+using UssJuniorTest.Application.Models.Requests;
+using UssJuniorTest.Application.Models.Responses;
 
 namespace UssJuniorTest.Controllers;
 
+[ApiController]
 [Route("api/driveLog")]
 public class DriveLogController : Controller
 {
-    public DriveLogController()
+    private IDriveService _driveService;
+    public DriveLogController( IDriveService driveService)
     {
+        _driveService = driveService;
     }
 
-    // TODO
-    // public ??? GetDriveLogsAggregation(??? args)
-    // {
-    // return ???    
-    // }
+    [HttpPost]
+    [ProducesResponseType(typeof(GetDrivesRes[]), 200)]
+    public IActionResult GetDriveLogsAggregation([FromBody]GetDrivesReq req)
+    {
+        return Ok(_driveService.GetDrives(req));
+    }
 }
